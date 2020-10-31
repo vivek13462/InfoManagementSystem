@@ -1,0 +1,160 @@
+﻿.countDown_cont {
+    font-family: 'Oswald', sans-serif;
+    color: #d96427;
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    justify-content: center;
+    padding-top: 5px;
+}
+
+.countDown_interval_cont {
+    display: flex;
+    width: auto;
+}
+
+    .countDown_interval_cont:nth-child(n+1):not(:last-child) {
+        margin-right: .8em;
+    }
+
+.countDown_interval_basic_cont {
+    display: flex;
+    flex-direction: column;
+}
+
+.countDown_interval_basic_cont_description {
+    display: flex;
+    margin-top: .4em;
+    font-size: .8em;
+    font-weight: 300;
+    color: #333333;
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    padding-bottom: 10px;
+    justify-content: center;
+}
+
+.countDown_digit_cont {
+    perspective: 1.6em * 2;
+    width: .8em;
+    height: 1.6em;
+    position: relative;
+    line-height: 1.6em;
+    font-size: 3.4em;
+    font-weight: 700;
+}
+
+    .countDown_digit_cont:nth-child(n+1):not(:last-child) {
+        margin-right: .05em;
+    }
+
+.countDown_digit_last_placeholder,
+.countDown_digit_new_placeholder {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.countDown_digit_last_placeholder {
+    bottom: 0;
+    background: #eeeeee;
+}
+
+.countDown_digit_last_placeholder_inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 50%;
+    position: relative;
+}
+
+.countDown_digit_new_placeholder {
+    top: 0;
+    background: rgb(247,247,247);
+    background: linear-gradient(180deg, rgba(247,247,247,1) 0%, rgba(232,231,231,1) 100%);
+}
+
+.countDown_digit_last_rotate,
+.countDown_digit_new_rotate {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50%;
+    font-weight: 700;
+    position: absolute;
+    top: 0px;
+    overflow: hidden;
+    animation-duration: .4s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    transform-origin: 100% 100%;
+}
+
+    .countDown_digit_last_rotate:after,
+    .countDown_digit_new_rotate:after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+.countDown_digit_last_rotate {
+    animation-name: countDown_flip_1;
+    background: #eeeeee;
+}
+
+.countDown_digit_new_rotate {
+    animation-name: countDown_flip_2;
+    background: rgb(247,247,247);
+    background: linear-gradient(0deg, rgba(247,247,247,1) 0%, rgba(232,231,231,1) 100%);
+}
+
+.countDown_digit_new_rotated {
+    transform: rotateX(180deg);
+    width: 100%;
+    height: 100%;
+}
+
+.countDown_digit_new_rotated_inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 50%;
+    position: absolute;
+}
+
+@keyframes countDown_flip_1 {
+    0% {
+        transform: rotateX(0);
+        z-index: 1;
+    }
+
+    100% {
+        transform: rotateX(-180deg);
+        z-index: 0;
+    }
+}
+
+@keyframes countDown_flip_2 {
+    0% {
+        transform: rotateX(0);
+        z-index: 0;
+    }
+
+    100% {
+        transform: rotateX(-180deg);
+        z-index: 1;
+    }
+}
