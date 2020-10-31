@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -47,6 +47,10 @@ namespace InfoManagementSystem.Models
                 userSubmission.lastName = c["content"][i]["answers"]["3"]["answer"] != null ? c["content"][i]["answers"]["3"]["answer"]["last"].ToString() : "";
                 userSubmission.country = c["content"][i]["answers"]["8"]["answer"] != null ? c["content"][i]["answers"]["8"]["answer"].ToString() : "";
                 userSubmission.favCar = c["content"][i]["answers"]["9"]["answer"] != null ? c["content"][i]["answers"]["9"]["answer"].ToString() : "";
+                userSubmission.address = c["content"][i]["answers"]["5"]["answer"] != null ? c["content"][i]["answers"]["5"]["answer"]["addr_line1"].ToString() : "";
+                userSubmission.city = c["content"][i]["answers"]["5"]["answer"] != null ? c["content"][i]["answers"]["5"]["answer"]["city"].ToString() : "";
+                userSubmission.state = c["content"][i]["answers"]["5"]["answer"] != null ? c["content"][i]["answers"]["5"]["answer"]["state"].ToString() : "";
+                userSubmission.zip = c["content"][i]["answers"]["5"]["answer"] != null ? c["content"][i]["answers"]["5"]["answer"]["postal"].ToString() : "";
                 lstformData.Add(userSubmission);
             }
             lstformData.RemoveAll(x => x.status != "ACTIVE");
