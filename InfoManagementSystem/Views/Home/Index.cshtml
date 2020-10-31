@@ -1,31 +1,125 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@model InfoManagementSystem.Models.formData
+
+@{
+    Layout = null;
 }
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Customer's Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/site.min.css" />
+    <link rel="stylesheet" href="~/Content/tracker.css" />
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Oswald:600&display=swap" rel="stylesheet" />
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/Content/style.css" />
+
+</head>
+
+<body>
+
+
+    <!-- HEADING CONTENT -->
+    <div class="top-container">
+        <div class="container">
+            <div class="row">
+                <p class="small text-right">1 JANUARY 2020 - 30 SEPTEMBER 2020</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    <!-- /HEADING CONTENT -->
+    <!-- MAIN HEADER -->
+    <div class="container-fluid">
+        <div class="head-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                        <div align="center">
+
+                            <div class="scoreboard">
+                                <div class="row" style="padding-bottom: 10px;">
+                                    <p class="orange-text"><strong>TOTAL OF PARTICIPANTS</strong></p>
+                                    <div class="participant oswald">
+                                        @Model.lstformData.Count
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <!-- /MAIN HEADER -->
+    <!-- SCOREBOARD starts -->
+    <div class="container" style="padding-top: 50px;">
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-12 col-md-6" style="padding-top: 0px; padding-bottom: 10px;">
+                <h2 class="orange-text"><strong>Customer's Info</strong></h2>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-2">
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-2">
+                <a href="https://www.jotform.com/203045808099055" target="_blank">
+                    <div class="icon-txt">
+                        <p class="orange-text"><strong>Online Form</strong></p>
+                    </div>
+                </a>
+            </div>
+
+            <!--<div class="col-xs-4 col-sm-4 col-md-2">
+                @Html.ActionLink("Excel", "ExcelFile", "DreamTeam5", null)
+                <div class="icon">
+                    <img src="~/images/dreamteam5league/icon-download.png" class="icon" alt="Download" />
+                </div>
+            </div>-->
+
+        </div>
     </div>
-</div>
+    <!-- SCOREBOARD ends -->
+    <!-- TRACKER Starts-->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="table-responsive">
+                    <div class="table-top">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <th style="text-align: left;"><strong>First Name</strong></th>
+                                    <th style="text-align: center;"><strong>Last Name</strong></th>
+                                    <th style="text-align: center;"><strong>Country</strong></th>
+                                    <th style="text-align: center;"><strong>Fav Car</strong></th>
+                                </tr>
+                                @foreach (var item in Model.lstformData)
+                                {
+                                    <tr>
+                                        <td style="text-align: left;">@Html.DisplayFor(modelitem => item.firstName)</td>
+                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.lastName)</td>
+                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.country)</td>
+                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.favCar)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" style="height: 100px;">
+        </div>
+    </div>
+
+</body>
+</html>
