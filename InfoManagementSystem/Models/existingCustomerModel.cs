@@ -22,6 +22,7 @@ namespace InfoManagementSystem.Models
         public int getCustDetails()
         {            
             formData fd = new formData();
+            PriceModel pmObj = new PriceModel();
             lstOnlineCustomers = new List<fromFields>();
             lstOnlineCustomers = fd.callJotAPI("");
             string custIDs = string.Join(",", lstOnlineCustomers.Select(e => e.custId).Distinct());
@@ -56,6 +57,22 @@ namespace InfoManagementSystem.Models
                         case 12:
                             lstCustomerSales[i].perDiscQualified += (int)specialMonths.December;
                             break;
+                    }
+                    if(lstCustomerSales[i].favProduct == "iPhone")
+                    {
+                        lstCustomerSales[i].prodPrice = pmObj.iPhone;
+                    }
+                    else if(lstCustomerSales[i].favProduct == "iWatch")
+                    {
+                        lstCustomerSales[i].prodPrice = pmObj.iWatch;
+                    }
+                    else if(lstCustomerSales[i].favProduct == "iPad")
+                    {
+                        lstCustomerSales[i].prodPrice = pmObj.iPad;
+                    }
+                    else
+                    {
+                        lstCustomerSales[i].prodPrice = pmObj.AirPod;
                     }
                 }
             }
