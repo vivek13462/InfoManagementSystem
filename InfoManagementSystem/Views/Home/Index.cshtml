@@ -1,4 +1,4 @@
-@model InfoManagementSystem.Models.formData
+@model InfoManagementSystem.Models.formDataModel
 
 @{
     Layout = null;
@@ -28,28 +28,40 @@
     <div class="top-container">
         <div class="container">
             <div class="row">
-                <p class="small text-right">1 JANUARY 2020 - 30 SEPTEMBER 2020</p>
+                <p class="small text-right" style="color:orangered">
+                <label style="font-family:Arial; color: blue">Today's Date: </label>@DateTime.Now.Month/@DateTime.Now.Day/@DateTime.Now.Year</p>
             </div>
         </div>
     </div>
     <!-- /HEADING CONTENT -->
     <!-- MAIN HEADER -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color:blanchedalmond">
         <div class="head-container">
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
                         <div align="center">
-
                             <div class="scoreboard">
                                 <div class="row" style="padding-bottom: 10px;">
-                                    <p class="orange-text"><strong>TOTAL OF PARTICIPANTS</strong></p>
+                                    <p class="orange-text"><strong>TOTAL CUSTOMER</strong></p>
                                     <div class="participant oswald">
                                         @Model.lstformData.Count
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
+                        <div align="center">
+                            <div class="scoreboard">
+                                <div class="row" style="padding-bottom: 10px;">
+                                    <p class="orange-text"><label style="color:blue">United States:</label><strong>&nbsp;@Model.countUS</strong></p>
+                                    <p class="orange-text"><label style="color:blue">Germany:</label><strong>&nbsp;@Model.countDE</strong></p>
+                                    <p class="orange-text"><label style="color:blue">Singapore:</label><strong>&nbsp;@Model.countSG</strong></p>
+                                    <div class="participant oswald">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,22 +77,25 @@
                 <h2 class="orange-text"><strong>Customer's Info</strong></h2>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-2">
-            </div>
-            <div class="col-xs-4 col-sm-4 col-md-2">
-                <a href="https://www.jotform.com/203045808099055" target="_blank">
+                <a href="https://www.jotform.com/203060722539046" target="_blank">
                     <div class="icon-txt">
                         <p class="orange-text"><strong>Online Form</strong></p>
                     </div>
                 </a>
             </div>
 
-            <!--<div class="col-xs-4 col-sm-4 col-md-2">
-                @Html.ActionLink("Excel", "ExcelFile", "DreamTeam5", null)
-                <div class="icon">
-                    <img src="~/images/dreamteam5league/icon-download.png" class="icon" alt="Download" />
+            <div class="col-xs-4 col-sm-4 col-md-2">
+                <div class="icon-txt">
+                    <p class="orange-text"><strong>@Html.ActionLink("Excel", "ExcelFile", "Home")</strong></p>
+                    <!--<img src="~/images/excelImage/icon-download.png" class="icon" alt="Download" />-->
                 </div>
-            </div>-->
-
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-2">
+                    <div class="icon-txt">
+                        <p class="orange-text"><strong>@Html.ActionLink("Discount", "CheckDiscount", "Home",null, new { target = "_blank" })</strong></p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
     <!-- SCOREBOARD ends -->
@@ -94,19 +109,23 @@
                         <table class="table table-condensed">
                             <tbody>
                                 <tr>
+                                    <th style="text-align: center;"><strong>Customer ID</strong></th>
                                     <th style="text-align: left;"><strong>First Name</strong></th>
                                     <th style="text-align: center;"><strong>Last Name</strong></th>
+                                    <th style="text-align: center;"><strong>Email</strong></th>
                                     <th style="text-align: center;"><strong>Country</strong></th>
-                                    <th style="text-align: center;"><strong>Fav Car</strong></th>
+                                    <th style="text-align: center;"><strong>Fav Product</strong></th>
                                 </tr>
                                 @foreach (var item in Model.lstformData)
                                 {
-                                    <tr>
-                                        <td style="text-align: left;">@Html.DisplayFor(modelitem => item.firstName)</td>
-                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.lastName)</td>
-                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.country)</td>
-                                        <td style="text-align: center;">@Html.DisplayFor(modelitem => item.favCar)</td>
-                                    </tr>
+                                <tr>
+                                    <td style="text-align: left;">@Html.DisplayFor(modelitem => item.custId)</td>
+                                    <td style="text-align: center;">@Html.DisplayFor(modelitem => item.firstName)</td>
+                                    <td style="text-align: center;">@Html.DisplayFor(modelitem => item.lastName)</td>
+                                    <td style="text-align: center;">@Html.DisplayFor(modelitem => item.email)</td>
+                                    <td style="text-align: center;">@Html.DisplayFor(modelitem => item.country)</td>
+                                    <td style="text-align: center;">@Html.DisplayFor(modelitem => item.favProduct)</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
