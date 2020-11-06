@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,7 +14,7 @@ namespace InfoManagementSystem.Models
         public PriceModel()
         {
             this.iPhone = 799;
-            this.iPhone = 350;
+            this.iWatch = 350;
             this.iPad = 750;
             this.AirPod = 250;
         }
