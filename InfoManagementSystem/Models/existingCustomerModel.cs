@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,90 +10,125 @@ namespace InfoManagementSystem.Models
 {
     public class existingCustomerModel
     {
-        private enum specialMonths { October = 15, November = 20, December = 25 };
-        private const String conString = "Data Source=1009-sql-vivekt; Initital Catalog=UserMgmt; Integrated Security=False; UserID=***;Password=*** Connect Timeout=15; Encrypt=False; Packet Size=4096";
+        private enum specialMonths { October = 15, November = 20, December = 25 }; // Extra Discounts
 
-        private static String qry_custDetails = @"Select c.customerid,sum(total) as totalSale from customers c inner join orders o
-                                                on c.customer = o.customerid where year(o.orderdate) = 2020 and c.customerid in ({0}) group by c.customerid";
-
-        public List<fromFields> lstOnlineCustomers { get; set; }
-        public List<fromFields> lstCustomerSales { get; set; }
+        private const String conString = "Data Source=DESKTOP-GDIP1KV\\SQLEXPRESS;Initial Catalog=InfoMgmtSystem;Integrated Security=True";        
+        public List<formFieldsModel> lstOnlineCustomers { get; set;}
+        public List<formFieldsModel> lstCustomerSales { get; set; }
         public Dictionary<string, int> prodDisc { get; set; }
 
-        public int getCustDetails()
+        public existingCustomerModel()
+        {
+            // Product and discount % on them
+            prodDisc = new Dictionary<string, int>();
+            prodDisc.Add("iPhone", 10);
+            prodDisc.Add("iWatch", 8);
+            prodDisc.Add("iPad", 11);
+            prodDisc.Add("AirPod", 5);
+        }
+
+        public List<formFieldsModel> getCustDetails()
         {            
-            formData fd = new formData();
+            formDataModel fdObj = new formDataModel();
             PriceModel pmObj = new PriceModel();
-            lstOnlineCustomers = new List<fromFields>();
-            lstOnlineCustomers = fd.callJotAPI("");
-            string custIDs = string.Join(",", lstOnlineCustomers.Select(e => e.custId).Distinct());
+            lstOnlineCustomers = new List<formFieldsModel>();
+            lstOnlineCustomers = fdObj.callJotFormAPI();
+            string custIDs = string.Join(",", lstOnlineCustomers.Select(e => e.custId));
             try
             {
-                SqlDataAdapter adap = new SqlDataAdapter(String.Format(qry_custDetails, custIDs),conString);
                 DataTable dt = new DataTable();
-                adap.Fill(dt);
-                lstCustomerSales = new List<fromFields>();
-                foreach(DataRow dr in dt.Rows)
+                using (SqlConnection conn = new SqlConnection(conString))
                 {
-                    fromFields fdData = new fromFields();
+                    SqlCommand command = new SqlCommand();
+                    command.Connection = conn;
+                    String strAppend = "";
+                    String strIds = "";
+                    int index = 1;
+                    String paramName = "";
+                    String[] strArrayNames;
+                    strIds = custIDs;
+                    strArrayNames = strIds.Split(',');
+                    foreach (String item in strArrayNames)
+                    {
+                        paramName = "@custID" + index;
+                        command.Parameters.AddWithValue(paramName, item); //Making individual parameters for every name  
+                        strAppend += paramName + ",";
+                        index += 1;
+                    }
+                    strAppend = strAppend.ToString().Remove(strAppend.LastIndexOf(","), 1); //Remove the last comma 
+                    command.CommandText = @"select o.Customerid,sum(o.Total) as totalSale from Orders o inner join OrderDetails od
+                                            on o.OrderId = od.OrderId where o.IsDelivered = 'YES' and od.PyamentReceived = 'YES' and 
+                                            OrderDate >= DATEADD(Month, -3, GetDate()) and o.Customerid in (" + strAppend + ") group by o.Customerid";
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);                  
+
+                    adapter.Fill(dt);
+                }
+                lstCustomerSales = new List<formFieldsModel>();
+                foreach (DataRow dr in dt.Rows)
+                {
+                    formFieldsModel fdData = new formFieldsModel();
                     fdData.custId = Int32.Parse(dr["customerid"].ToString());
-                    fdData.totalSale = decimal.Parse(dr["totalSale"].ToString());
+                    fdData.pastPurchaseAmt = double.Parse(dr["totalSale"].ToString());
                     lstCustomerSales.Add(fdData);
                 }
-                lstCustomerSales.RemoveAll(v => v.totalSale < 1000);
-                for(int i = 0; i < lstCustomerSales.Count; i++)
+                for(int i = 0; i < lstOnlineCustomers.Count; i++)
                 {
-                    lstCustomerSales[i].favProduct = lstOnlineCustomers.Where(c => c.custId == lstCustomerSales[i].custId).Select(x => x.favProduct).ToString();
-                    lstCustomerSales[i].createdOn = DateTime.Parse(lstOnlineCustomers.Where(c => c.custId == lstCustomerSales[i].custId).Select(x => x.createdOn).ToString());
-                    int percentagedisc = calcDisc(lstCustomerSales[i].favProduct);
-                    lstCustomerSales[i].perDiscQualified = percentagedisc;
-                    switch (lstCustomerSales[i].createdOn.Month)
+                    var tempLst = lstCustomerSales.Where(c => c.custId == lstOnlineCustomers[i].custId).ToList();
+                    double pastOrdersAmt = tempLst.Select(c => c.pastPurchaseAmt).FirstOrDefault();
+                    int percentagedisc = calcDisc(lstOnlineCustomers[i].favProduct, pastOrdersAmt);
+                    lstOnlineCustomers[i].perDiscQualified = percentagedisc;
+                    switch (lstOnlineCustomers[i].createdOn.Month)
                     {
                         case 10:
-                            lstCustomerSales[i].perDiscQualified += (int)specialMonths.October;
+                            lstOnlineCustomers[i].perDiscQualified += (int)specialMonths.October;
                             break;
                         case 11:
-                            lstCustomerSales[i].perDiscQualified += (int)specialMonths.November;
+                            lstOnlineCustomers[i].perDiscQualified += (int)specialMonths.November;
                             break;
                         case 12:
-                            lstCustomerSales[i].perDiscQualified += (int)specialMonths.December;
+                            lstOnlineCustomers[i].perDiscQualified += (int)specialMonths.December;
                             break;
                     }
-                    if(lstCustomerSales[i].favProduct == "iPhone")
+                    if(lstOnlineCustomers[i].favProduct == "iPhone")
                     {
-                        lstCustomerSales[i].prodPrice = pmObj.iPhone;
+                        lstOnlineCustomers[i].prodPrice = pmObj.iPhone;
                     }
-                    else if(lstCustomerSales[i].favProduct == "iWatch")
+                    else if(lstOnlineCustomers[i].favProduct == "iWatch")
                     {
-                        lstCustomerSales[i].prodPrice = pmObj.iWatch;
+                        lstOnlineCustomers[i].prodPrice = pmObj.iWatch;
                     }
-                    else if(lstCustomerSales[i].favProduct == "iPad")
+                    else if(lstOnlineCustomers[i].favProduct == "iPad")
                     {
-                        lstCustomerSales[i].prodPrice = pmObj.iPad;
+                        lstOnlineCustomers[i].prodPrice = pmObj.iPad;
                     }
                     else
                     {
-                        lstCustomerSales[i].prodPrice = pmObj.AirPod;
+                        lstOnlineCustomers[i].prodPrice = pmObj.AirPod;
                     }
+                    double perQual = lstOnlineCustomers[i].perDiscQualified;
+                    double prodActualPrice = lstOnlineCustomers[i].prodPrice;
+                    double DiscAmt = (perQual / 100) * prodActualPrice;
+                    lstOnlineCustomers[i].finalAmt = lstOnlineCustomers[i].prodPrice - DiscAmt;
+                    DiscAmt = Math.Round(DiscAmt, 2);
+                    double discounted_cost = lstOnlineCustomers[i].prodPrice - DiscAmt;
+                    discounted_cost = Math.Round(discounted_cost, 2);
+                    lstOnlineCustomers[i].finalAmt = discounted_cost;
                 }
+                return lstOnlineCustomers;
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return 0;
+            return null;
         }
         
-        public int calcDisc(string favProduct)
-        {
-            prodDisc.Add("iPhone", 10);
-            prodDisc.Add("iWatch", 8);
-            prodDisc.Add("iPad", 11);
-            prodDisc.Add("AirPod", 5);
-
+        public int calcDisc(string favProduct, double pastPurchase)
+        {       
             int percentage = 0;
             int result;
-            if(prodDisc.TryGetValue(favProduct, out result))
+            if(prodDisc.TryGetValue(favProduct, out result) && pastPurchase >= 100)
             {
                 percentage = result;
             }
