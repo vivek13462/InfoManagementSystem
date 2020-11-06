@@ -146,8 +146,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\formData.cs" />
-    <Compile Include="Models\fromFields.cs" />
+    <Compile Include="Models\formDataModel.cs" />
+    <Compile Include="Models\formFieldsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
